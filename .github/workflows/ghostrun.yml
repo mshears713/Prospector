@@ -1,0 +1,38 @@
+name: Ghostrun Screenshot Test
+
+on:
+  pull_request:
+    # Run on every pull request event.
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ghostrun:
+    name: Run ghost screenshot check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        # Grab the pull request code.
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        # Install the requested Python version.
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        # Install project requirements.
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        # Download browsers needed for Playwright.
+        run: |
+          python -m playwright install --with-deps chromium
+
+      - name: Run ghostrun test
+        # Launch the Streamlit check and capture artifacts.
+        run: |
+          python tests/ghostrun_test.py
