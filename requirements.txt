@@ -1,0 +1,2 @@
+# Add Frontier Data Prospector dependencies here.
+streamlit
