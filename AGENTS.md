@@ -36,6 +36,7 @@ You should simply write clean, well-commented, and clearly structured code.
    - `database.py` → Database connection and basic insert/retrieve logic.
    - `/data/` → Raw or scraped data.
    - `/tests/` → Results, screenshots, logs, and JSON outputs from ghost runs.
+   - `.github/workflows/` → GitHub Actions workflow files. Do not place workflow YAML files in the project root.
    - `/lessons/` → Markdown summaries or notes (optional, written by the mentor later).
 
 5. **Ghost Run Artifacts**

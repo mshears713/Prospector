@@ -1,38 +1,49 @@
-name: Ghostrun Screenshot Test
+name: Ghostrun Scraper Check
 
 on:
   pull_request:
-    # Run on every pull request event.
+    # Run whenever a pull request is opened, updated, or reopened.
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    # Allow mentors to trigger the workflow manually when needed.
+    inputs: {}
 
 jobs:
-  ghostrun:
-    name: Run ghost screenshot check
+  run-ghost-scraper:
+    name: Run scraper and collect output
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        # Grab the pull request code.
+      - name: Check out repository
+        # Bring the pull request code into the runner.
         uses: actions/checkout@v4
 
       - name: Set up Python
-        # Install the requested Python version.
+        # Install the project Python version.
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        # Install project requirements.
+      - name: Install project dependencies
+        # Keep the environment updated and install required packages.
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install Playwright browsers
-        # Download browsers needed for Playwright.
-        run: |
-          python -m playwright install --with-deps chromium
+      - name: Install Playwright Chromium
+        # Download Chromium and its system dependencies for Playwright.
+        run: python -m playwright install --with-deps chromium
 
-      - name: Run ghostrun test
-        # Launch the Streamlit check and capture artifacts.
+      - name: Run scraper script
+        # Execute the scraper and print the results for quick inspection.
         run: |
-          python tests/ghostrun_test.py
+          set -e
+          python scraper.py
+
+      - name: Upload scraper output
+        # Share the JSON output so mentors can review the run results.
+        uses: actions/upload-artifact@v4
+        with:
+          name: scraper_output
+          path: data/scrape_output.json
+          if-no-files-found: warn
